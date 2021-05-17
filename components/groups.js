@@ -109,16 +109,23 @@ export default function Test() {
 
     return (
         <section id='groups' className='px-1'>
-            <h3>Groups: {groupBadgesHTML}</h3>
+            <span>Pre-defined group names: {groupBadgesHTML}</span>
 
-            <div className="input-group mb-3">
-                <span className="input-group-text">Group</span>
+            <div className="input-group">
+                <span className="input-group-text">Display name</span>
                 <input type="text" className="form-control" value={groupName} onChange={evt => { setGroupName(evt.target.value); }} />
+                <span className="input-group-text">External ID</span>
+                <input type="text" className="form-control" value={groupName} style={{ fontSize: 'small' }} title='Same as display name.' />
                 <button className='btn btn-info' type="reset" onClick={handleClearResultsClick}>Clear results</button>
                 <button className='btn btn-primary' type="submit" onClick={handleSearchClick}>Search</button>
                 <button className='btn btn-success' type="submit" onClick={handleCreateClick}>Create</button>
+            </div>
+            <div className="input-group">
+                <span className="input-group-text">ID</span>
                 <input type="number" className="form-control" value={groupId} onChange={evt => { setGroupId(evt.target.value); }} placeholder='ID' />
                 <button className='btn btn-danger' type="submit" onClick={handleDeleteClick}>Delete</button>
+            </div>
+            <div className="input-group">
             </div>
             {statusHTML}
             {detailsHTML}
