@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import _ from 'lodash';
 import { loadActiveConnectionFromLocalStorage } from '../lib/util';
 
 const defaults = { state: 'Type group name or ID' };
@@ -10,7 +9,6 @@ export default function Test() {
 
     const [groupName, setGroupName] = useState('');
     const [groupId, setGroupId] = useState('');
-    const [operation, setOperation] = useState({ method: '' });
     const [operationResult, setOperationResult] = useState({});
     const [status, setStatus] = useState(defaults.state);
     const [connection, setConnection] = useState(loadActiveConnectionFromLocalStorage());
@@ -25,6 +23,7 @@ export default function Test() {
 
     const handleSearchClick = () => {
         if (!groupName) return;
+        setConnection(loadActiveConnectionFromLocalStorage()); // User can change active coonection in Test section.
         setStatus('searching ...');
         const qs = '?filter=displayName eq "'+encodeURIComponent(groupName)+'"';
         axios.post('/api/scim/Groups', { secretToken, url, qs, method: 'GET' })
@@ -41,7 +40,9 @@ export default function Test() {
                 setStatus(`Error searching for "${groupName}"`);
             });
     };
+
     const handleClearResultsClick = () => {
+        setConnection(loadActiveConnectionFromLocalStorage());
         setGroupName(''); 
         setGroupId('');
         setOperationResult();
@@ -49,6 +50,7 @@ export default function Test() {
     };
 
     const handleCreateClick = async(evt) => {
+        setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('creating ...');
         axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { externalId: groupName }})
@@ -65,6 +67,7 @@ export default function Test() {
     };
 
     const handleDeleteClick = async(evt) => {
+        setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('deleting ...');
         axios.post('/api/scim/Groups', { secretToken, url, method: 'DELETE', group: { id: groupId }})
@@ -101,7 +104,7 @@ export default function Test() {
     const groupBadgesHTML = ['[TEST SCIM] R&D', '[TEST SCIM] Catering'].map(group => {
         const c = group === groupName ? 'bg-info' : 'bg-secondary';
         return <span key={group}>
-            <span className={`badge fs-6 ${c}`} style={{ fontSize: 'x-small', cursor: 'pointer' }} data-connection={group} onClick={() => setGroupName(group)}>
+            <span className={`badge mx-1 ${c}`} style={{ fontSize: 'small', cursor: 'pointer' }} data-connection={group} onClick={() => setGroupName(group)}>
                 {group}
             </span>
         </span>;
@@ -120,7 +123,7 @@ export default function Test() {
                 <button className='btn btn-primary' type="submit" onClick={handleSearchClick}>Search</button>
                 <button className='btn btn-success' type="submit" onClick={handleCreateClick}>Create</button>
             </div>
-            <div className="input-group">
+            <div className="input-group mb-3">
                 <span className="input-group-text">ID</span>
                 <input type="number" className="form-control" value={groupId} onChange={evt => { setGroupId(evt.target.value); }} placeholder='ID' />
                 <button className='btn btn-danger' type="submit" onClick={handleDeleteClick}>Delete</button>

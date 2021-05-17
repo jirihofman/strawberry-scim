@@ -19,6 +19,8 @@ export default function Test() {
     } else if (result && result.ok === false) {
         resultAlertClass = 'alert-danger';
         resultAlertText = result.reason;
+    } else if (result && result.pending === true) {
+        resultAlertText = result.reason;
     }
     /** Sets the connection as active */
     const handleConnectionBadgeClick = (evt) => {
@@ -59,7 +61,7 @@ export default function Test() {
 
     const handleTestConnectionClick = async() => {
         if (url && url.startsWith('http') && secretToken) {
-            
+            setResult({ pending: true, reason: 'Connecting ...' });
             axios.post('/api/scim/test', { secretToken, url }).then(response => {
                 if (typeof window !== 'undefined' && window.localStorage) {
                     const connectionString = url + '|' + secretToken;
