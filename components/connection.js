@@ -1,33 +1,28 @@
 import { useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { loadConnectionsFromLocalStorage } from '../lib/util';
+import { loadConnectionsFromLocalStorage, loadActiveConnectionFromLocalStorage } from '../lib/util';
 
 export default function Test() {
 
-    const [url, setUrl] = useState('');
-    const [secretToken, setSecretToken] = useState('');
     const [result, setResult] = useState();
     const [connections, setConnections] = useState(loadConnectionsFromLocalStorage());
+    const [activeConnection, setActiveConnection] = useState(loadActiveConnectionFromLocalStorage());
+    const [url, setUrl] = useState(activeConnection ? activeConnection.split('|')[0] : '');
+    const [secretToken, setSecretToken] = useState(activeConnection ? activeConnection.split('|')[1] : '');
 
-    let resultAlertClass = 'alert-secondary';
-    let resultAlertText = 'To be tested ...';
-
-    if (result && result.ok) {
-        resultAlertClass = 'alert-success';
-        resultAlertText = 'Success';
-    } else if (result && result.ok === false) {
-        resultAlertClass = 'alert-danger';
-        resultAlertText = result.reason;
-    } else if (result && result.pending === true) {
-        resultAlertText = result.reason;
-    }
     /** Sets the connection as active */
     const handleConnectionBadgeClick = (evt) => {
-        const con = evt.target.dataset.connection.split('|');
-        setUrl(con[0]);
-        setSecretToken(con[1]);
-        window.localStorage.setItem('activeConnection', evt.target.dataset.connection);
+        const selectedConnection = evt.target.dataset.connection;
+
+        window.localStorage.setItem('activeConnection', selectedConnection);
+        if (activeConnection && selectedConnection && activeConnection !== selectedConnection) {
+            window.location.reload();
+        } else {
+            const con = selectedConnection.split('|');
+            setUrl(con[0]);
+            setSecretToken(con[1]);
+        }
     };
 
     const handleConnectionRemoveBadgeClick = (evt) => {
@@ -42,6 +37,7 @@ export default function Test() {
             const activeConnection = window.localStorage.getItem('activeConnection');
             if (!activeConnection) {
                 window.localStorage.setItem('activeConnection', url + '|' + secretToken);
+                setActiveConnection(url + '|' + secretToken);
             }
         } else {
             setUrl('');
@@ -55,6 +51,8 @@ export default function Test() {
         setUrl('');
         setSecretToken('');
         setResult(null);
+        setConnections([]);
+        setActiveConnection();
         window.localStorage.removeItem('activeConnection');
         window.localStorage.removeItem('connections');
     };
@@ -70,11 +68,12 @@ export default function Test() {
                         connections.push(connectionString);
                     }
                     setConnections(connections);
+                    setActiveConnection(connectionString);
                     window.localStorage.setItem('connections', JSON.stringify(connections));
                     window.localStorage.setItem('activeConnection', connectionString);
                 }
 
-                setResult({ ok: true });
+                setResult({ ok: true, status: response.status });
             }).catch(error => {
                 setResult({ ok: false, reason: JSON.stringify(error.response.data) });
                 return;
@@ -85,15 +84,27 @@ export default function Test() {
     };
 
     const badgesHTML = connections.map(connection => {
-        const c = connection === url + '|' + secretToken ? 'bg-info' : 'bg-secondary';
+        const c = connection === activeConnection ? 'bg-info' : 'bg-secondary';
         return <span key={connection}>
             <span className={`badge fs-6 ${c}`} style={{ fontSize: 'x-small', cursor: 'pointer' }} data-connection={connection} onClick={handleConnectionBadgeClick}>
                 {connection.split('|')[0]}
             </span>
             <span className='badge btn bg-dark fs-6' data-connection={connection} onClick={handleConnectionRemoveBadgeClick}>x</span>
         </span>;
+    });
+
+    let resultAlertClass = 'alert-secondary';
+    let resultAlertText = 'To be tested ...';
+
+    if (result && result.ok) {
+        resultAlertClass = 'alert-success';
+        resultAlertText = 'Success: ' + result.reason;
+    } else if (result && result.ok === false) {
+        resultAlertClass = 'alert-danger';
+        resultAlertText = result.reason;
+    } else if (result && result.pending === true) {
+        resultAlertText = result.reason;
     }
-    );
 
     return (
         <section id='test' className='px-1'>

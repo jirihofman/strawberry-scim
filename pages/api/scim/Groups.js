@@ -6,9 +6,8 @@ export default (req, res) => {
     let url = req.body.url;
     let data = {};
 
-    console.log("SCIM REQ", req.body)
-    
     if (req.method !== 'POST') return res.status(400).end('only POST supported, got: ' + req.method);
+
     if (req.body.method === 'POST') {
         const groupName = req.body.group.externalId;
         // Creating a group

@@ -24,13 +24,13 @@ export default function Header({ children }) {
                 <div className='modal-dialog'>
                     <div className='modal-content'>
                         <div className='modal-header'>
-                            <h5 className='modal-title' id='exampleModalLabel'>About 🍓</h5>
+                            <h5 className='modal-title' id='exampleModalLabel'>About 🍓 <code>strawberry-scim</code> client</h5>
                             <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close' />
                         </div>
                         <div className='modal-body'>
                             <section className='px-1'>
                                 <h3>Lightweight SCIM client</h3>
-                                <p>Its purpose is to easily simulate provisioning via SCIM (mainly by Azure AD) without actually running it.</p>
+                                <p>{pjson.description}</p>
                             </section>
                             <table>
                                 <tbody>
