@@ -98,7 +98,7 @@ export default function Test() {
 
     if (result && result.ok) {
         resultAlertClass = 'alert-success';
-        resultAlertText = 'Success: ' + result.reason;
+        resultAlertText = 'Success: ' + result.status;
     } else if (result && result.ok === false) {
         resultAlertClass = 'alert-danger';
         resultAlertText = result.reason;
