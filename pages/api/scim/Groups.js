@@ -41,7 +41,7 @@ export default (req, res) => {
             });
 
     } else {
-        return res.status(400).end('TODO PATCH DELETE, ID');
+        return res.status(400).end('TODO PATCH ID');
     }
 };
 

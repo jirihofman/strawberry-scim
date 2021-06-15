@@ -56,6 +56,7 @@ export default function Test() {
         axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { externalId: groupName }})
             .then(response => {
                 setOperationResult({ ok: true, data: response.data });
+                setGroupId(response.data.id);
             })
             .catch(error => {
                 console.error('error creating', error.response.data);
@@ -101,10 +102,13 @@ export default function Test() {
 
     const detailsHTML = operationDetails ? <div className={`alert ${resultAlertClass}`} role="alert"><pre>{operationDetails}</pre></div> : null;
 
-    const groupBadgesHTML = ['[TEST SCIM] R&D', '[TEST SCIM] Catering'].map(group => {
+    const groupBadgesHTML = ['Sales', '[TEST SCIM] R&D', '[TEST SCIM] Catering'].map(group => {
         const c = group === groupName ? 'bg-info' : 'bg-secondary';
         return <span key={group}>
-            <span className={`badge mx-1 ${c}`} style={{ fontSize: 'small', cursor: 'pointer' }} data-connection={group} onClick={() => setGroupName(group)}>
+            <span className={`badge mx-1 ${c}`} style={{ fontSize: 'small', cursor: 'pointer' }} data-connection={group} onClick={() => {
+                setGroupName(group);
+                setGroupId('');
+            }}>
                 {group}
             </span>
         </span>;
