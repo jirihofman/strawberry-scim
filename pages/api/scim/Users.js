@@ -13,23 +13,23 @@ export default (req, res) => {
     if (req.method !== 'POST') return res.status(400).end('only POST supported, got: ' + req.method);
 
     if (req.body.method === 'POST') {
-        const groupName = req.body.group.externalId;
-        // Creating a group
-        data = { externalId: groupName, displayName: groupName };
-        axios.post(url + '/Groups', data, { headers, curlirize: false })
+        const userName = req.body.user.externalId;
+        // Creating a user
+        data = { externalId: userName, userName: userName };
+        axios.post(url + '/Users', data, { headers, curlirize: false })
         //.get(url + '/Users?filter=userName eq "bf3f8e8d-f431-4adf-bbe0-833dd06e2a80"', { headers })
             .then(response => {
                 // TODO: try axios.interceptors to have it all in one place
                 response.data.curlCommand = response.config.curlCommand;
                 res.status(200).json(response.data);
             }).catch(error => {
-                console.error(error.response);
+                console.error(error);
                 return res.status(400).json(_.pick(error.response, 'statusText', 'status', 'data', 'url'));
             });
     } else if (req.body.method === 'DELETE') {
-        const groupId = req.body.group.id;
+        const userId = req.body.user.id;
         // Creating a group
-        axios.delete(url + '/Groups/' + groupId, { headers, curlirize: false })
+        axios.delete(url + '/Users/' + userId, { headers, curlirize: false })
             .then(response => {
                 // TODO: try axios.interceptors to have it all in one place
                 response.data = { curlCommand: response.config.curlCommand };
@@ -40,13 +40,13 @@ export default (req, res) => {
             });
     } else if (req.body.method === 'GET') {
         // Filtering
-        axios.get(url + '/Groups' + req.body.qs, { headers, curlirize: false })
+        axios.get(url + '/Users' + req.body.qs, { headers, curlirize: false })
             .then(response => {
                 // TODO: try axios.interceptors to have it all in one place
                 response.data.curlCommand = response.config.curlCommand;
                 return res.status(200).json(response.data);
             }).catch(error => {
-                console.error(error.response);
+                console.error(error);
                 return res.status(400).json(_.pick(error.response, 'statusText', 'status', 'data', 'url'));
             });
 

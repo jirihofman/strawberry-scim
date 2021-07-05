@@ -71,6 +71,10 @@ export default function Test() {
                     setActiveConnection(connectionString);
                     window.localStorage.setItem('connections', JSON.stringify(connections));
                     window.localStorage.setItem('activeConnection', connectionString);
+
+                    if (response.data.curlCommand)
+                        // eslint-disable-next-line no-console
+                        console.info(response.data.curlCommand);
                 }
 
                 setResult({ ok: true, status: response.status });

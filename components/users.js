@@ -3,13 +3,13 @@ import axios from 'axios';
 import _ from 'lodash';
 import { loadActiveConnectionFromLocalStorage, getOperationResultDetails } from '../lib/util';
 
-const defaults = { state: 'Type group name or ID' };
+const defaults = { state: 'Type username or ID' };
 export default function Test() {
 
     if (typeof window === 'undefined') return [];
 
-    const [groupName, setGroupName] = useState('');
-    const [groupId, setGroupId] = useState('');
+    const [userName, setUserName] = useState('');
+    const [userId, setUserId] = useState('');
     const [operationResult, setOperationResult] = useState({});
     const [status, setStatus] = useState(defaults.state);
     const [connection, setConnection] = useState(loadActiveConnectionFromLocalStorage());
@@ -23,32 +23,31 @@ export default function Test() {
     const [url, secretToken] = connection.split('|');
 
     const handleSearchClick = () => {
-        if (!groupName) return;
+        if (!userName) return;
         setConnection(loadActiveConnectionFromLocalStorage()); // User can change active coonection in Test section.
         setStatus('searching ...');
-        const qs = '?filter=displayName eq "'+encodeURIComponent(groupName)+'"';
-        axios.post('/api/scim/Groups', { secretToken, url, qs, method: 'GET' })
+        const qs = '?filter=userName eq "'+encodeURIComponent(userName)+'"';
+        axios.post('/api/scim/Users', { secretToken, url, qs, method: 'GET' })
             .then(response => {
                 setOperationResult({ ok: true, data: { Resources: response.data.Resources, totalResults: response.data.totalResults, startIndex: response.data.startIndex, itemsPerPage: response.data.itemsPerPage }});
-                const numUsers = response.data.totalResults === 1 ? response.data.Resources[0].members && response.data.Resources[0].members.length : 0;
                 if (response.data.totalResults === 1) {
-                    setGroupId(response.data.Resources[0].id);
+                    setUserId(response.data.Resources[0].id);
                 }
-                setStatus(`Found ${response.data.totalResults} group for "${groupName}" with ${numUsers} users.`);
+                setStatus(`Found ${response.data.totalResults} user for "${userName}"`);
                 if (response.data.curlCommand)
                     // eslint-disable-next-line no-console
                     console.info(response.data.curlCommand);
             })
             .catch(error => {
                 setOperationResult({ ok: false, reason: error.response.data });
-                setStatus(`Error searching for "${groupName}"`);
+                setStatus(`Error searching for "${userName}"`);
             });
     };
 
     const handleClearResultsClick = () => {
         setConnection(loadActiveConnectionFromLocalStorage());
-        setGroupName(''); 
-        setGroupId('');
+        setUserName(''); 
+        setUserId('');
         setOperationResult();
         setStatus(defaults.state);
     };
@@ -57,10 +56,10 @@ export default function Test() {
         setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('creating ...');
-        axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { externalId: groupName }})
+        axios.post('/api/scim/Users', { secretToken, url, method: 'POST', user: { externalId: userName }})
             .then(response => {
                 setOperationResult({ ok: true, data: _.omit(response.data, 'curlCommand') });
-                setGroupId(response.data.id);
+                setUserId(response.data.id);
                 if (response.data.curlCommand)
                     // eslint-disable-next-line no-console
                     console.info(response.data.curlCommand);
@@ -70,7 +69,7 @@ export default function Test() {
                 setOperationResult({ ok: false, reason: error.response.data });
             })
             .finally(()=> {
-                setStatus(evt.target.innerText + ' ' + groupName);
+                setStatus(evt.target.innerText + ' ' + userName);
             });
     };
 
@@ -78,7 +77,7 @@ export default function Test() {
         setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('deleting ...');
-        axios.post('/api/scim/Groups', { secretToken, url, method: 'DELETE', group: { id: groupId }})
+        axios.post('/api/scim/Users', { secretToken, url, method: 'DELETE', user: { id: userId }})
             .then(response => {
                 setOperationResult({ ok: true });
                 if (response.data.curlCommand)
@@ -86,11 +85,10 @@ export default function Test() {
                     console.info(response.data.curlCommand);
             })
             .catch(error => {
-                console.error('error deleting group', error.response.data);
                 setOperationResult({ ok: false, reason: error.response.data });
             })
             .finally(() => {
-                setStatus(evt.target.innerText + ' ' + groupName);
+                setStatus(evt.target.innerText + ' ' + userName);
             });
     };
 
@@ -102,39 +100,37 @@ export default function Test() {
     }
 
     const operationDetails = getOperationResultDetails(operationResult);
-
     const statusHTML = <div className={`alert ${resultAlertClass}`} role="alert">{status}</div>;
-
     const detailsHTML = operationDetails ? <div className={`alert ${resultAlertClass}`} role="alert"><pre>{operationDetails}</pre></div> : null;
 
-    const groupBadgesHTML = ['Sales', '[TEST SCIM] R&D', '[TEST SCIM] Catering'].map(group => {
-        const c = group === groupName ? 'bg-info' : 'bg-secondary';
-        return <span key={group}>
-            <span className={`badge mx-1 ${c}`} style={{ fontSize: 'small', cursor: 'pointer' }} data-connection={group} onClick={() => {
-                setGroupName(group);
-                setGroupId('');
+    const userBadgesHTML = ['adam@example.com', 'carl@example.com', 'jane@example.com'].map(user => {
+        const c = user === userName ? 'bg-info' : 'bg-secondary';
+        return <span key={user}>
+            <span className={`badge mx-1 ${c}`} style={{ fontSize: 'small', cursor: 'pointer' }} data-connection={user} onClick={() => {
+                setUserName(user);
+                setUserId('');
             }}>
-                {group}
+                {user}
             </span>
         </span>;
     });
 
     return (
-        <section id='groups' className='px-1'>
-            <span>Pre-defined group names: {groupBadgesHTML}</span>
+        <section id='users' className='px-1'>
+            <span>Pre-defined user names: {userBadgesHTML}</span>
 
             <div className="input-group">
                 <span className="input-group-text">Display name</span>
-                <input type="text" className="form-control" value={groupName} onChange={evt => { setGroupName(evt.target.value); }} />
+                <input type="text" className="form-control" value={userName} onChange={evt => { setUserName(evt.target.value); }} />
                 <span className="input-group-text">External ID</span>
-                <input type="text" className="form-control" value={groupName} style={{ fontSize: 'small' }} title='Same as display name.' />
+                <input type="text" className="form-control" value={userName} style={{ fontSize: 'small' }} title='Same as display name.' />
                 <button className='btn btn-info' type="reset" onClick={handleClearResultsClick}>Clear results</button>
                 <button className='btn btn-primary' type="submit" onClick={handleSearchClick}>Search</button>
                 <button className='btn btn-success' type="submit" onClick={handleCreateClick}>Create</button>
             </div>
             <div className="input-group mb-3">
                 <span className="input-group-text">ID</span>
-                <input type="number" className="form-control" value={groupId} onChange={evt => { setGroupId(evt.target.value); }} placeholder='ID' />
+                <input type="number" className="form-control" value={userId} onChange={evt => { setUserId(evt.target.value); }} placeholder='ID' />
                 <button className='btn btn-danger' type="submit" onClick={handleDeleteClick}>Delete</button>
             </div>
             <div className="input-group">
