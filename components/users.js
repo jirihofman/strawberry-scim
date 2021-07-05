@@ -33,7 +33,7 @@ export default function Test() {
                 if (response.data.totalResults === 1) {
                     setUserId(response.data.Resources[0].id);
                 }
-                setStatus(`Found ${response.data.totalResults} user for "${userName}" status TODO.`);
+                setStatus(`Found ${response.data.totalResults} user for "${userName}"`);
                 if (response.data.curlCommand)
                     // eslint-disable-next-line no-console
                     console.info(response.data.curlCommand);
