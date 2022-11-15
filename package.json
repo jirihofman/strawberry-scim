@@ -1,7 +1,7 @@
 {
   "name": "strawberry-scim",
-  "version": "0.1.1",
-  "private": true,
+  "version": "0.1.2",
+  "private": false,
   "description": "Lightweight SCIM client with simple Bootstrap UI to make HTTP requests to your SCIM Endpoints. Based mainly on AAD SCIM client.",
   "repository": {
     "url": "https://github.com/jirihofman/strawberry-scim"
@@ -21,12 +21,11 @@
     "axios": "^0.21.2",
     "axios-curlirize": "1.3.7",
     "lodash": "^4.17.21",
-    "next": "^12.1.0",
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "next": "^12.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "cypress": "7.1.0",
     "eslint": "^7.13.0",
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-react": "^7.21.5"
