@@ -39,7 +39,7 @@ export default function Header({ children }) {
                                     </tr>
                                     <tr>
                                         <th>Author</th>
-                                        <td>{pjson.author.name}</td>
+                                        <td><a href={pjson.author.url} target='_blank' rel='noreferrer'>{pjson.author.name}</a></td>
                                     </tr>
                                     <tr>
                                         <th>Questions / bugs</th>
