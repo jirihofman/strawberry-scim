@@ -1,6 +1,6 @@
 {
   "name": "strawberry-scim",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "private": false,
   "description": "Lightweight SCIM client with simple Bootstrap UI to make HTTP requests to your SCIM Endpoints. Based mainly on AAD SCIM client.",
   "repository": {
