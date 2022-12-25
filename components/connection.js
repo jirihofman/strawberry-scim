@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { loadConnectionsFromLocalStorage, loadActiveConnectionFromLocalStorage } from '../lib/util';
+import { loadConnectionsFromLocalStorage, loadActiveConnectionFromLocalStorage, getFixedCurlCommand } from '../lib/util';
+import CurlCopyButton from './curl-copy-button';
 
 export default function Test() {
 
@@ -10,6 +11,7 @@ export default function Test() {
     const [activeConnection, setActiveConnection] = useState(loadActiveConnectionFromLocalStorage());
     const [url, setUrl] = useState(activeConnection ? activeConnection.split('|')[0] : '');
     const [secretToken, setSecretToken] = useState(activeConnection ? activeConnection.split('|')[1] : '');
+    const [curl, setCurl] = useState();
 
     /** Sets the connection as active */
     const handleConnectionBadgeClick = (evt) => {
@@ -60,6 +62,7 @@ export default function Test() {
     const handleTestConnectionClick = async() => {
         if (url && url.startsWith('http') && secretToken) {
             setResult({ pending: true, reason: 'Connecting ...' });
+            setCurl();
             axios.post('/api/scim/test', { secretToken, url }).then(response => {
                 if (typeof window !== 'undefined' && window.localStorage) {
                     const connectionString = url + '|' + secretToken;
@@ -72,9 +75,7 @@ export default function Test() {
                     window.localStorage.setItem('connections', JSON.stringify(connections));
                     window.localStorage.setItem('activeConnection', connectionString);
 
-                    if (response.data.curlCommand)
-                        // eslint-disable-next-line no-console
-                        console.info(response.data.curlCommand);
+                    setCurl(getFixedCurlCommand(response.data.curlCommand));
                 }
 
                 setResult({ ok: true, status: response.status });
@@ -110,6 +111,8 @@ export default function Test() {
         resultAlertText = result.reason;
     }
 
+    const copyCurlButton = <CurlCopyButton curl={curl} />;
+
     return (
         <section id='test' className='px-1'>
             <h3>Test credentials {badgesHTML}</h3>
@@ -123,7 +126,7 @@ export default function Test() {
                 <button className='btn btn-primary' type="submit" onClick={handleTestConnectionClick}>Test connection</button>
             </div>
             <div className={`alert ${resultAlertClass}`} role="alert">
-                {resultAlertText}
+                {resultAlertText} {copyCurlButton}
             </div>
         </section>
     );

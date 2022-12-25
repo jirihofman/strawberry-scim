@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { loadActiveConnectionFromLocalStorage, getOperationResultDetails } from '../lib/util';
+import { loadActiveConnectionFromLocalStorage, getOperationResultDetails, getFixedCurlCommand } from '../lib/util';
+import CurlCopyButton from './curl-copy-button';
 
 const defaults = { state: 'Type username or ID' };
 export default function Test() {
@@ -13,6 +14,7 @@ export default function Test() {
     const [operationResult, setOperationResult] = useState({});
     const [status, setStatus] = useState(defaults.state);
     const [connection, setConnection] = useState(loadActiveConnectionFromLocalStorage());
+    const [curl, setCurl] = useState();
 
     const disabled = !connection;
 
@@ -26,6 +28,7 @@ export default function Test() {
         if (!userName) return;
         setConnection(loadActiveConnectionFromLocalStorage()); // User can change active coonection in Test section.
         setStatus('searching ...');
+        setCurl();
         const qs = '?filter=userName eq "'+encodeURIComponent(userName)+'"';
         axios.post('/api/scim/Users', { secretToken, url, qs, method: 'GET' })
             .then(response => {
@@ -34,9 +37,7 @@ export default function Test() {
                     setUserId(response.data.Resources[0].id);
                 }
                 setStatus(`Found ${response.data.totalResults} user for "${userName}"`);
-                if (response.data.curlCommand)
-                    // eslint-disable-next-line no-console
-                    console.info(response.data.curlCommand);
+                setCurl(getFixedCurlCommand(response.data.curlCommand));
             })
             .catch(error => {
                 setOperationResult({ ok: false, reason: error.response.data });
@@ -50,19 +51,19 @@ export default function Test() {
         setUserId('');
         setOperationResult();
         setStatus(defaults.state);
+        setCurl();
     };
 
     const handleCreateClick = async(evt) => {
         setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('creating ...');
+        setCurl();
         axios.post('/api/scim/Users', { secretToken, url, method: 'POST', user: { externalId: userName }})
             .then(response => {
                 setOperationResult({ ok: true, data: _.omit(response.data, 'curlCommand') });
                 setUserId(response.data.id);
-                if (response.data.curlCommand)
-                    // eslint-disable-next-line no-console
-                    console.info(response.data.curlCommand);
+                setCurl(getFixedCurlCommand(response.data.curlCommand));
             })
             .catch(error => {
                 console.error('error creating', error.response.data);
@@ -77,12 +78,11 @@ export default function Test() {
         setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('deleting ...');
+        setCurl();
         axios.post('/api/scim/Users', { secretToken, url, method: 'DELETE', user: { id: userId }})
             .then(response => {
                 setOperationResult({ ok: true });
-                if (response.data.curlCommand)
-                    // eslint-disable-next-line no-console
-                    console.info(response.data.curlCommand);
+                setCurl(getFixedCurlCommand(response.data.curlCommand));
             })
             .catch(error => {
                 setOperationResult({ ok: false, reason: error.response.data });
@@ -99,8 +99,10 @@ export default function Test() {
         resultAlertClass = 'alert-danger';
     }
 
+    const copyCurlButton = <CurlCopyButton curl={curl} />;
+
     const operationDetails = getOperationResultDetails(operationResult);
-    const statusHTML = <div className={`alert ${resultAlertClass}`} role="alert">{status}</div>;
+    const statusHTML = <div className={`alert ${resultAlertClass}`} role="alert">{status} {copyCurlButton}</div>;
     const detailsHTML = operationDetails ? <div className={`alert ${resultAlertClass}`} role="alert"><pre>{operationDetails}</pre></div> : null;
 
     const userBadgesHTML = ['adam@example.com', 'carl@example.com', 'jane@example.com'].map(user => {
