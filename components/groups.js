@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { loadActiveConnectionFromLocalStorage, getOperationResultDetails } from '../lib/util';
+import { loadActiveConnectionFromLocalStorage, getOperationResultDetails, getFixedCurlCommand } from '../lib/util';
+import CurlCopyButton from './curl-copy-button';
 
 const defaults = { state: 'Type group name or ID' };
 export default function Test() {
@@ -13,6 +14,7 @@ export default function Test() {
     const [operationResult, setOperationResult] = useState({});
     const [status, setStatus] = useState(defaults.state);
     const [connection, setConnection] = useState(loadActiveConnectionFromLocalStorage());
+    const [curl, setCurl] = useState();
 
     const disabled = !connection;
 
@@ -26,6 +28,7 @@ export default function Test() {
         if (!groupName) return;
         setConnection(loadActiveConnectionFromLocalStorage()); // User can change active coonection in Test section.
         setStatus('searching ...');
+        setCurl();
         const qs = '?filter=displayName eq "'+encodeURIComponent(groupName)+'"';
         axios.post('/api/scim/Groups', { secretToken, url, qs, method: 'GET' })
             .then(response => {
@@ -35,9 +38,7 @@ export default function Test() {
                     setGroupId(response.data.Resources[0].id);
                 }
                 setStatus(`Found ${response.data.totalResults} group for "${groupName}" with ${numUsers} users.`);
-                if (response.data.curlCommand)
-                    // eslint-disable-next-line no-console
-                    console.info(response.data.curlCommand);
+                setCurl(getFixedCurlCommand(response.data.curlCommand));
             })
             .catch(error => {
                 setOperationResult({ ok: false, reason: error.response.data });
@@ -51,19 +52,19 @@ export default function Test() {
         setGroupId('');
         setOperationResult();
         setStatus(defaults.state);
+        setCurl();
     };
 
     const handleCreateClick = async(evt) => {
         setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('creating ...');
+        setCurl();
         axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { externalId: groupName }})
             .then(response => {
                 setOperationResult({ ok: true, data: _.omit(response.data, 'curlCommand') });
                 setGroupId(response.data.id);
-                if (response.data.curlCommand)
-                    // eslint-disable-next-line no-console
-                    console.info(response.data.curlCommand);
+                setCurl(getFixedCurlCommand(response.data.curlCommand));
             })
             .catch(error => {
                 console.error('error creating', error.response.data);
@@ -78,12 +79,11 @@ export default function Test() {
         setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('deleting ...');
+        setCurl();
         axios.post('/api/scim/Groups', { secretToken, url, method: 'DELETE', group: { id: groupId }})
             .then(response => {
                 setOperationResult({ ok: true });
-                if (response.data.curlCommand)
-                    // eslint-disable-next-line no-console
-                    console.info(response.data.curlCommand);
+                setCurl(getFixedCurlCommand(response.data.curlCommand));
             })
             .catch(error => {
                 console.error('error deleting group', error.response.data);
@@ -101,10 +101,9 @@ export default function Test() {
         resultAlertClass = 'alert-danger';
     }
 
+    const copyCurlButton = <CurlCopyButton curl={curl} />;
     const operationDetails = getOperationResultDetails(operationResult);
-
-    const statusHTML = <div className={`alert ${resultAlertClass}`} role="alert">{status}</div>;
-
+    const statusHTML = <div className={`alert ${resultAlertClass}`} role="alert">{status} {copyCurlButton}</div>;
     const detailsHTML = operationDetails ? <div className={`alert ${resultAlertClass}`} role="alert"><pre>{operationDetails}</pre></div> : null;
 
     const groupBadgesHTML = ['Sales', '[TEST SCIM] R&D', '[TEST SCIM] Catering'].map(group => {
