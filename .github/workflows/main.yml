@@ -1,5 +1,9 @@
 name: Build, lint, tests
-on: [push, pull_request]
+on:
+  push:
+    branches: [ "dev", "main", "master" ]
+  pull_request:
+    branches: [ "dev", "main", "master" ]
 jobs:
   eslint:
     runs-on: ubuntu-latest
