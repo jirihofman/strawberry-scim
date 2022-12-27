@@ -15,11 +15,13 @@
     "dev": "next dev -p 4041",
     "build": "next build",
     "start": "next start -p 5041",
-    "lint": "eslint . --ext .js,.jsx"
+    "lint": "eslint . --ext .js,.jsx",
+    "ci:test": "./node_modules/.bin/cypress run --component"
   },
   "dependencies": {
     "axios": "^0.21.2",
     "axios-curlirize": "^2.0.0",
+    "cypress": "^12.2.0",
     "lodash": "^4.17.21",
     "next": "^12.3.0",
     "react": "^18.2.0",
