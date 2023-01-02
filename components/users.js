@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import { loadActiveConnectionFromLocalStorage, getOperationResultDetails, getFixedCurlCommand } from '../lib/util';
@@ -7,18 +7,18 @@ import CurlCopyButton from './curl-copy-button';
 const defaults = { state: 'Type username or ID' };
 export default function Test() {
 
-    if (typeof window === 'undefined') return [];
+    useEffect(() => {
+        setConnection(loadActiveConnectionFromLocalStorage());
+    });
 
     const [userName, setUserName] = useState('');
     const [userId, setUserId] = useState('');
     const [operationResult, setOperationResult] = useState({});
     const [status, setStatus] = useState(defaults.state);
-    const [connection, setConnection] = useState(loadActiveConnectionFromLocalStorage());
+    const [connection, setConnection] = useState(null);
     const [curl, setCurl] = useState();
 
-    const disabled = !connection;
-
-    if (disabled) {
+    if (!connection) {
         return <div className={'alert alert-danger'} role="alert" onClick={() => { setConnection(loadActiveConnectionFromLocalStorage());}}>No connection selected. Click to reaload active connection.</div>;
     }
 
@@ -26,7 +26,6 @@ export default function Test() {
 
     const handleSearchClick = () => {
         if (!userName) return;
-        setConnection(loadActiveConnectionFromLocalStorage()); // User can change active coonection in Test section.
         setStatus('searching ...');
         setCurl();
         const qs = '?filter=userName eq "'+encodeURIComponent(userName)+'"';
@@ -46,7 +45,6 @@ export default function Test() {
     };
 
     const handleClearResultsClick = () => {
-        setConnection(loadActiveConnectionFromLocalStorage());
         setUserName(''); 
         setUserId('');
         setOperationResult();
@@ -55,7 +53,6 @@ export default function Test() {
     };
 
     const handleCreateClick = async(evt) => {
-        setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('creating ...');
         setCurl();
@@ -75,7 +72,6 @@ export default function Test() {
     };
 
     const handleDeleteClick = async(evt) => {
-        setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('deleting ...');
         setCurl();
@@ -105,7 +101,7 @@ export default function Test() {
     const statusHTML = <div className={`alert ${resultAlertClass}`} role="alert">{status} {copyCurlButton}</div>;
     const detailsHTML = operationDetails ? <div className={`alert ${resultAlertClass}`} role="alert"><pre>{operationDetails}</pre></div> : null;
 
-    const userBadgesHTML = ['adam@example.com', 'carl@example.com', 'jane@example.com'].map(user => {
+    const userBadgesHTML = ['adam@example.com', 'carl@example.com', 'jane@example.com', 'strawberry-scim-u-0@1secmail.org'].map(user => {
         const c = user === userName ? 'bg-info' : 'bg-secondary';
         return <span key={user}>
             <span className={`badge mx-1 ${c}`} style={{ fontSize: 'small', cursor: 'pointer' }} data-connection={user} onClick={() => {

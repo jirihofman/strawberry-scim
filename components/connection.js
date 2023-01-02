@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import { loadConnectionsFromLocalStorage, loadActiveConnectionFromLocalStorage, getFixedCurlCommand } from '../lib/util';
@@ -7,24 +7,34 @@ import CurlCopyButton from './curl-copy-button';
 export default function Test() {
 
     const [result, setResult] = useState();
-    const [connections, setConnections] = useState(loadConnectionsFromLocalStorage());
-    const [activeConnection, setActiveConnection] = useState(loadActiveConnectionFromLocalStorage());
+    const [connections, setConnections] = useState([]);
+    const [activeConnection, setActiveConnection] = useState(null);
     const [url, setUrl] = useState(activeConnection ? activeConnection.split('|')[0] : '');
     const [secretToken, setSecretToken] = useState(activeConnection ? activeConnection.split('|')[1] : '');
     const [curl, setCurl] = useState();
 
-    /** Sets the connection as active */
-    const handleConnectionBadgeClick = (evt) => {
-        const selectedConnection = evt.target.dataset.connection;
-
-        window.localStorage.setItem('activeConnection', selectedConnection);
-        if (activeConnection && selectedConnection && activeConnection !== selectedConnection) {
-            window.location.reload();
-        } else {
-            const con = selectedConnection.split('|');
+    useEffect(() => {
+        const connections = loadConnectionsFromLocalStorage();
+        setConnections(connections);
+    }, []);
+    useEffect(() => {
+        const activeConnection = loadActiveConnectionFromLocalStorage();
+        setActiveConnection(activeConnection);
+        if (activeConnection) {
+            const con = activeConnection.split('|');
             setUrl(con[0]);
             setSecretToken(con[1]);
         }
+    }, []);
+
+    /** Sets the connection as active */
+    const handleConnectionBadgeClick = (evt) => {
+        const selectedConnection = evt.target.dataset.connection;
+        window.localStorage.setItem('activeConnection', selectedConnection);
+        const con = selectedConnection.split('|');
+        setUrl(con[0]);
+        setSecretToken(con[1]);
+        setActiveConnection(selectedConnection);
     };
 
     const handleConnectionRemoveBadgeClick = (evt) => {

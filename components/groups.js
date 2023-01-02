@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import { loadActiveConnectionFromLocalStorage, getOperationResultDetails, getFixedCurlCommand } from '../lib/util';
@@ -7,18 +7,18 @@ import CurlCopyButton from './curl-copy-button';
 const defaults = { state: 'Type group name or ID' };
 export default function Test() {
 
-    if (typeof window === 'undefined') return [];
+    useEffect(() => {
+        setConnection(loadActiveConnectionFromLocalStorage());
+    });
 
     const [groupName, setGroupName] = useState('');
     const [groupId, setGroupId] = useState('');
     const [operationResult, setOperationResult] = useState({});
     const [status, setStatus] = useState(defaults.state);
-    const [connection, setConnection] = useState(loadActiveConnectionFromLocalStorage());
+    const [connection, setConnection] = useState(null);
     const [curl, setCurl] = useState();
 
-    const disabled = !connection;
-
-    if (disabled) {
+    if (!connection) {
         return <div className={'alert alert-danger'} role="alert" onClick={() => { setConnection(loadActiveConnectionFromLocalStorage());}}>No connection selected. Click to reaload active connection.</div>;
     }
 
@@ -26,7 +26,6 @@ export default function Test() {
 
     const handleSearchClick = () => {
         if (!groupName) return;
-        setConnection(loadActiveConnectionFromLocalStorage()); // User can change active coonection in Test section.
         setStatus('searching ...');
         setCurl();
         const qs = '?filter=displayName eq "'+encodeURIComponent(groupName)+'"';
@@ -47,7 +46,6 @@ export default function Test() {
     };
 
     const handleClearResultsClick = () => {
-        setConnection(loadActiveConnectionFromLocalStorage());
         setGroupName(''); 
         setGroupId('');
         setOperationResult();
@@ -56,11 +54,10 @@ export default function Test() {
     };
 
     const handleCreateClick = async(evt) => {
-        setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('creating ...');
         setCurl();
-        axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { externalId: groupName }})
+        axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { id: groupId }})
             .then(response => {
                 setOperationResult({ ok: true, data: _.omit(response.data, 'curlCommand') });
                 setGroupId(response.data.id);
@@ -76,7 +73,6 @@ export default function Test() {
     };
 
     const handleDeleteClick = async(evt) => {
-        setConnection(loadActiveConnectionFromLocalStorage());
         setOperationResult();
         setStatus('deleting ...');
         setCurl();
