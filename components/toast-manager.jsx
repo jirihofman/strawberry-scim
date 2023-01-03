@@ -24,7 +24,7 @@ export function ToastProvider({ children }) {
     const onDismiss = id => () => removeToast(id);
 
     return (
-        <Ctx.Provider value={{ addToast, remove: removeToast }}>
+        <Ctx.Provider value={{ addToast, removeToast }}>
             {children}
             <ToastContainer>
                 {toasts.map(({ id, text, title, ...rest }) => (
