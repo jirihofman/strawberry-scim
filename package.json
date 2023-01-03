@@ -17,7 +17,7 @@
     "build": "next build",
     "start": "next start -p 5041",
     "lint": "eslint . --ext .js,.jsx",
-    "ci:test": "./node_modules/.bin/cypress run --component"
+    "ci:test": "./node_modules/.bin/cypress run --component && ./node_modules/.bin/cypress run"
   },
   "dependencies": {
     "axios": "^0.21.2",
