@@ -12,7 +12,7 @@ export default function Home() {
             <Connection />
 
             <Tabs
-                defaultActiveKey="advanced"
+                defaultActiveKey="users"
                 id="fill-tab-example"
                 className="mb-0"
                 justify
