@@ -20,8 +20,13 @@ import './commands';
 // require('./commands')
 
 import { mount } from 'cypress/react18';
+import { ToastProvider } from '../../components/toast-manager';
 
-Cypress.Commands.add('mount', mount);
+// https://docs.cypress.io/guides/component-testing/react/examples#React-Router
+Cypress.Commands.add('mount', (component, options = {}) => {
+
+    return mount(<ToastProvider>{component}</ToastProvider>, options);
+});
 
 // Example use:
 // cy.mount(<MyComponent />)

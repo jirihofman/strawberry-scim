@@ -129,7 +129,7 @@ export default function Test() {
 
             <div className="input-group mb-3">
                 <span className="input-group-text">Tenant URL</span>
-                <input type="text" className="form-control" id="test-url" value={url} onChange={evt => {setUrl(evt.target.value);}} placeholder='eg: https://your-ev.ngrok.io' />
+                <input type="text" className="form-control" id="test-url" value={url} onChange={evt => { setUrl(evt.target.value); }} placeholder='eg: https://your-dev.ngrok.io/api/scim' />
                 <span className="input-group-text">Secret Token</span>
                 <input type="text" className="form-control" id="secret-token" value={secretToken} onChange={evt => {setSecretToken(evt.target.value);}} />
                 <button className='btn btn-info' type="reset" onClick={handleResetConnectionClick}>Reset</button>
