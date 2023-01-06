@@ -6,12 +6,12 @@ import { loadActiveConnectionFromLocalStorage } from '../lib/util';
 
 const defaults = { userCount: 2, userAssign: true, userUpdate: true, testPrefix: 'strawberry-scim-' };
 const STEPS = {
-    gc: { endpoint: 'POST /Groups', name: 'Group created' },
-    uc: { endpoint: 'POST /Users', name: 'Users created' },
-    ua: { endpoint: 'PATCH /Groups/:id', name: 'Users added' },
-    um: { endpoint: 'PATCH /Users/:id', name: 'Users modified' },
-    ud: { endpoint: 'DELETE /Users/:id', name: 'Users deleted' },
-    gd: { endpoint: 'DELETE /Users/:id', name: 'Group deleted' },
+    gc: { endpoint: 'POST /Groups', name: '👥 created' },
+    uc: { endpoint: 'POST /Users', name: '👤 created' },
+    ua: { endpoint: 'PATCH /Groups/:id', name: '👤 added' },
+    um: { endpoint: 'PATCH /Users/:id', name: '👤 modified' },
+    ud: { endpoint: 'DELETE /Users/:id', name: '👤 deleted' },
+    gd: { endpoint: 'DELETE /Users/:id', name: '👥 deleted' },
 };
 export default function Advanced() {
 
@@ -263,22 +263,19 @@ export default function Advanced() {
                         <th className=''>
                             <span className="input-group-text">Number of users: <code className='ps-1'>{userCount.toString().padStart(2, '0')}</code></span>
                         </th>
-                        <th>
-                            <span className="input-group-text">Data prefix</span>
-                        </th>
-                        <th colSpan={2}>
-                            <button className='btn btn-info' type="reset" onClick={handleClearResultsClick}>Reset</button>
-                            <button className='btn btn-primary' type="submit" onClick={handleStartClick}>Start</button>
-                            <button className='btn btn-secondary' type="button" onClick={() => {alert('Coming soon. Use your intuition.');}}>Help</button>
-                        </th>
-                    </tr>
-                    <tr>
                         <td>
                             <input type={'range'} value={userCount} max={20} onChange={evt => setUserCount(Number(evt.target.value))} />
                         </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <span className="input-group-text">Data prefix</span>
+                        </th>
                         <td>
                             <input type="text" className="form-control" id="secret-token" value={defaults.testPrefix} readOnly />
                         </td>
+                    </tr>
+                    <tr>
                         <td>
                             <FormCheck
                                 type="switch"
@@ -298,20 +295,24 @@ export default function Advanced() {
                             />
                         </td>
                     </tr>
+                    <tr>
+                        <th colSpan={2}>
+                            <button className='btn btn-info' type="reset" onClick={handleClearResultsClick}>Reset</button>
+                            <button className='btn btn-primary' type="submit" onClick={handleStartClick}>Start</button>
+                            <button className='btn btn-secondary' type="button" onClick={() => {alert('Coming soon. Use your intuition.');}}>Help</button>
+                        </th>
+                    </tr>
                 </table>
             </div>
-
-            <p>
-                <ProgressBar>
-                    {getProgressBar(operations)}
-                </ProgressBar>
-            </p>
+            <ProgressBar>
+                {getProgressBar(operations)}
+            </ProgressBar>
             <table>
                 <tr>
-                    <th>Status</th>
+                    <th style={{ maxWidth: '12px' }}>ℹ️</th>
                     <th>Operation</th>
                     <th>Endpoint</th>
-                    <th>Duration (ms)</th>
+                    <th>Duration</th>
                 </tr>
                 {renderStatusRow('gc', operationsRef.current)}
                 {userCount > 0 ? <>
@@ -371,9 +372,9 @@ function renderStatusRow(step, operations = []) {
     const endpoint = STEPS[step].endpoint;
     const maxDuraton = _.max(stepOps.map(op => op.duration));
     return <tr>
-        <td>{status}</td>
+        <td style={{ width: '10px' }}>{status}</td>
         <td>{stepName}</td>
-        <td><code>{endpoint}</code></td>
+        <td><code style={{ fontSize: '10px' }}>{endpoint}</code></td>
         <td>{maxDuraton}</td>
     </tr>;
 }
