@@ -129,7 +129,7 @@ export default function Test() {
             <h3>Test credentials {badgesHTML}</h3>
 
             <Row>
-                <Col xs={12} md={6}>
+                <Col xs={12} md={5}>
                     <InputGroup>
                         <InputGroup.Text>
                             <OverlayTrigger trigger={['click', 'hover']} placement="auto" overlay={
@@ -145,7 +145,7 @@ export default function Test() {
                         <input type="text" className="form-control" id="test-url" value={url} onChange={evt => { setUrl(evt.target.value); }} placeholder='SCIM endpoint' />
                     </InputGroup>
                 </Col>
-                <Col xs={12} md={6}>
+                <Col xs={12} md={5}>
                     <InputGroup>
                         <InputGroup.Text>
                             <OverlayTrigger trigger={['click', 'hover']} placement="auto" overlay={
@@ -161,9 +161,9 @@ export default function Test() {
                         <input type="text" className="form-control" id="secret-token" value={secretToken} onChange={evt => { setSecretToken(evt.target.value); }} placeholder='Secret token' />
                     </InputGroup>
                 </Col>
-                <Col xs={12} md={6}>
+                <Col xs={12} md={2}>
                     <button className='btn btn-info' type="reset" onClick={handleResetConnectionClick}>Reset</button>
-                    <button className='btn btn-primary' type="submit" onClick={handleTestConnectionClick}>Test connection</button>
+                    <button className='btn btn-primary' type="submit" onClick={handleTestConnectionClick}>Test</button>
                 </Col>
             </Row>
             <div className={`alert ${resultAlertClass}`} role="alert">
