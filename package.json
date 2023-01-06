@@ -24,6 +24,7 @@
     "ci:test": "./node_modules/.bin/cypress run --component && npm run test:build && npm run test:start & npm run test:wait-on && npm run test:cy:run"
   },
   "dependencies": {
+    "@primer/octicons-react": "^17.10.1",
     "axios": "^0.21.2",
     "axios-curlirize": "^2.0.0",
     "cypress": "^12.2.0",

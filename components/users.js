@@ -101,7 +101,7 @@ export default function Test() {
     const statusHTML = <div className={`alert ${resultAlertClass}`} role="alert">{status} {copyCurlButton}</div>;
     const detailsHTML = operationDetails ? <div className={`alert ${resultAlertClass}`} role="alert"><pre>{operationDetails}</pre></div> : null;
 
-    const userBadgesHTML = ['adam@example.com', 'carl@example.com', 'jane@example.com', 'strawberry-scim-u-0@1secmail.org'].map(user => {
+    const userBadgesHTML = ['adam@example.com', 'carl@example.com', 'strawberry-scim-u-0@1secmail.org'].map(user => {
         const c = user === userName ? 'bg-info' : 'bg-secondary';
         return <span key={user}>
             <span className={`badge mx-1 ${c}`} style={{ fontSize: 'small', cursor: 'pointer' }} data-connection={user} onClick={() => {
@@ -115,7 +115,7 @@ export default function Test() {
 
     return (
         <section id='users' className='px-1'>
-            <span>Pre-defined user names: {userBadgesHTML}</span>
+            <div className='m-6'>Pre-defined user names: {userBadgesHTML}</div>
 
             <div className="input-group">
                 <span className="input-group-text">Display name</span>

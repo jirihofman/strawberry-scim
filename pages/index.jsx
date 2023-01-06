@@ -17,13 +17,13 @@ export default function Home() {
                 className="mb-0"
                 justify
             >
-                <Tab eventKey="users" title="/Users" className='pt-3 border-start border-end'>
+                <Tab eventKey="users" title={<code style={{ fontSize: '14px' }}>👤 /Users</code>} className='pt-3 border-start border-end'>
                     <Users />
                 </Tab>
-                <Tab eventKey="groups" title="/Groups" className='pt-3 border-start border-end'>
+                <Tab eventKey="groups" title={<code style={{ fontSize: '14px' }}>👥 /Groups</code>} className='pt-3 border-start border-end'>
                     <Groups />
                 </Tab>
-                <Tab eventKey="advanced" title="Advanced" className='pt-3 border-start border-end'>
+                <Tab eventKey="advanced" title={<span style={{ fontSize: '14px' }}>🧪 Advanced</span>} className='pt-3 border-start border-end'>
                     <Advanced />
                 </Tab>
             </Tabs>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
+import { OverlayTrigger, Popover, Row, Col, InputGroup } from 'react-bootstrap';
 import { loadConnectionsFromLocalStorage, loadActiveConnectionFromLocalStorage, getFixedCurlCommand } from '../lib/util';
 import CurlCopyButton from './curl-copy-button';
 
@@ -127,14 +128,44 @@ export default function Test() {
         <section id='test' className='px-1'>
             <h3>Test credentials {badgesHTML}</h3>
 
-            <div className="input-group mb-3">
-                <span className="input-group-text">Tenant URL</span>
-                <input type="text" className="form-control" id="test-url" value={url} onChange={evt => { setUrl(evt.target.value); }} placeholder='eg: https://your-dev.ngrok.io/api/scim' />
-                <span className="input-group-text">Secret Token</span>
-                <input type="text" className="form-control" id="secret-token" value={secretToken} onChange={evt => {setSecretToken(evt.target.value);}} />
-                <button className='btn btn-info' type="reset" onClick={handleResetConnectionClick}>Reset</button>
-                <button className='btn btn-primary' type="submit" onClick={handleTestConnectionClick}>Test connection</button>
-            </div>
+            <Row>
+                <Col xs={12} md={6}>
+                    <InputGroup>
+                        <InputGroup.Text>
+                            <OverlayTrigger trigger={['click', 'hover']} placement="auto" overlay={
+                                <Popover style={{ minWidth: '300px' }}>
+                                    <Popover.Body>
+                                        Tenant URL eg: <br /><code>https://your-dev.ngrok.io/api/scim</code>
+                                    </Popover.Body>
+                                </Popover>
+                            }>
+                                <span>🔌</span>
+                            </OverlayTrigger>
+                        </InputGroup.Text>
+                        <input type="text" className="form-control" id="test-url" value={url} onChange={evt => { setUrl(evt.target.value); }} placeholder='SCIM endpoint' />
+                    </InputGroup>
+                </Col>
+                <Col xs={12} md={6}>
+                    <InputGroup>
+                        <InputGroup.Text>
+                            <OverlayTrigger trigger={['click', 'hover']} placement="auto" overlay={
+                                <Popover style={{ minWidth: '300px' }}>
+                                    <Popover.Body>
+                                        secret token
+                                    </Popover.Body>
+                                </Popover>
+                            }>
+                                <span>🔤</span>
+                            </OverlayTrigger>                
+                        </InputGroup.Text>
+                        <input type="text" className="form-control" id="secret-token" value={secretToken} onChange={evt => { setSecretToken(evt.target.value); }} placeholder='Secret token' />
+                    </InputGroup>
+                </Col>
+                <Col xs={12} md={6}>
+                    <button className='btn btn-info' type="reset" onClick={handleResetConnectionClick}>Reset</button>
+                    <button className='btn btn-primary' type="submit" onClick={handleTestConnectionClick}>Test connection</button>
+                </Col>
+            </Row>
             <div className={`alert ${resultAlertClass}`} role="alert">
                 {resultAlertText} {copyCurlButton}
             </div>
