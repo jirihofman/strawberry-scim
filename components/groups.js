@@ -5,7 +5,7 @@ import { loadActiveConnectionFromLocalStorage, getOperationResultDetails, getFix
 import CurlCopyButton from './curl-copy-button';
 
 const defaults = { state: 'Type group name or ID' };
-export default function Test() {
+export default function Groups() {
 
     useEffect(() => {
         setConnection(loadActiveConnectionFromLocalStorage());
@@ -57,7 +57,7 @@ export default function Test() {
         setOperationResult();
         setStatus('creating ...');
         setCurl();
-        axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { id: groupId }})
+        axios.post('/api/scim/Groups', { secretToken, url, method: 'POST', group: { externalId: groupName }})
             .then(response => {
                 setOperationResult({ ok: true, data: _.omit(response.data, 'curlCommand') });
                 setGroupId(response.data.id);
