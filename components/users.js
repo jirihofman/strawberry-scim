@@ -5,7 +5,7 @@ import { loadActiveConnectionFromLocalStorage, getOperationResultDetails, getFix
 import CurlCopyButton from './curl-copy-button';
 
 const defaults = { state: 'Type username or ID' };
-export default function Test() {
+export default function Users() {
 
     useEffect(() => {
         setConnection(loadActiveConnectionFromLocalStorage());
