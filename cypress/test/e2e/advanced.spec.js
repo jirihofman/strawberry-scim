@@ -14,7 +14,7 @@ context('Advanced', () => {
         cy.intercept('POST', '/api/scim/Users', { statusCode: 200, body: {}}).as('users-post');
 
         cy.log('Checking defaults');
-        cy.get('#advanced .input-group-text').should('contain.text', 'Number of users: 02');
+        cy.get('#advanced .input-group-text').should('contain.text', '👤02');
         cy.get('#user-update').should('be.checked');
         cy.get('#user-assign').should('be.checked');
         
