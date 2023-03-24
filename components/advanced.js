@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import { FormCheck, ProgressBar, Row, Col, InputGroup, OverlayTrigger, Popover } from 'react-bootstrap';
 import _ from 'lodash';
