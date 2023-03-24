@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import FormCheck from 'react-bootstrap/FormCheck';
+import { FormCheck, ProgressBar, Row, Col, InputGroup, OverlayTrigger, Popover } from 'react-bootstrap';
 import _ from 'lodash';
 import { loadActiveConnectionFromLocalStorage } from '../lib/util';
 
@@ -258,53 +257,62 @@ export default function Advanced() {
 
     return (
         <section id='advanced' className='px-1'>
-            <div className="input-group mb-3">
-                <table>
-                    <tr>
-                        <th className=''>
-                            <span className="input-group-text">Number of users: <code className='ps-1'>{userCount.toString().padStart(2, '0')}</code></span>
-                        </th>
-                        <td>
-                            <input type={'range'} value={userCount} max={20} onChange={evt => setUserCount(Number(evt.target.value))} />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span className="input-group-text">Data prefix</span>
-                        </th>
-                        <td>
-                            <input type="text" className="form-control" id="secret-token" value={defaults.testPrefix} readOnly />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <FormCheck
-                                type="switch"
-                                id="user-assign"
-                                label="Assign User"
-                                title='Add each user to group'
-                                checked={userAssign} onChange={evt => setUserAssign(evt.target.checked)}
-                            />
-                        </td>
-                        <td>
-                            <FormCheck
-                                type="switch"
-                                id="user-update"
-                                label="Update User"
-                                title='Change userName (email address)'
-                                checked={userUpdate} onChange={evt => setUserUpdate(evt.target.checked)}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th colSpan={2}>
-                            <button className='btn btn-info' type="reset" onClick={handleClearResultsClick}>Reset</button>
-                            <button className='btn btn-primary' type="submit" onClick={handleStartClick}>Start</button>
-                            <button className='btn btn-secondary' type="button" onClick={() => {alert('Coming soon. Use your intuition.');}}>Help</button>
-                        </th>
-                    </tr>
-                </table>
-            </div>
+
+            <Row>
+                <Col xs={12} md={3}>
+                    <InputGroup>
+                        <InputGroup.Text>
+                            <OverlayTrigger trigger={['click', 'hover']} placement="auto" overlay={
+                                <Popover style={{ minWidth: '300px' }}>
+                                    <Popover.Body>
+                                        Number of users
+                                    </Popover.Body>
+                                </Popover>
+                            }>
+                                <span>👤<code className='ps-1'>{userCount.toString().padStart(2, '0')}</code></span>
+                            </OverlayTrigger>
+                        </InputGroup.Text>
+                        <input type={'range'} value={userCount} max={20} onChange={evt => setUserCount(Number(evt.target.value))} />
+                    </InputGroup>
+                </Col>
+                <Col xs={12} md={4}>
+                    <InputGroup>
+                        <InputGroup.Text>
+                            <OverlayTrigger trigger={['click', 'hover']} placement="auto" overlay={
+                                <Popover style={{ minWidth: '300px' }}>
+                                    <Popover.Body>
+                                        Prefix for <code>displayName</code> and <code>userName</code> is <b><code>{defaults.testPrefix}</code></b>
+                                    </Popover.Body>
+                                </Popover>
+                            }>
+                                <span>፦</span>
+                            </OverlayTrigger>
+                        </InputGroup.Text>
+                        <input type="text" className="form-control" id="secret-token" value={defaults.testPrefix} readOnly />
+                    </InputGroup>
+                </Col>
+                <Col xs={5} md={2}>
+                    <FormCheck
+                        type="switch"
+                        id="user-assign"
+                        label="Assign user"
+                        title='Add each user to group'
+                        checked={userAssign} onChange={evt => setUserAssign(evt.target.checked)}
+                    />
+                    <FormCheck
+                        type="switch"
+                        id="user-update"
+                        label="Update user"
+                        title='Change userName (email address)'
+                        checked={userUpdate} onChange={evt => setUserUpdate(evt.target.checked)}
+                    />
+                </Col>
+                <Col xs={7} md={3}>
+                    <button className='btn btn-info' type="reset" onClick={handleClearResultsClick}>Reset</button>
+                    <button className='btn btn-primary' type="submit" onClick={handleStartClick}>Start</button>
+                    <button className='btn btn-secondary' type="button" onClick={() => { alert('Coming soon. Use your intuition.'); }}>❔</button>
+                </Col>
+            </Row>
             <ProgressBar>
                 {getProgressBar(operations)}
             </ProgressBar>
