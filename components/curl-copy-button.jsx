@@ -1,3 +1,4 @@
+'use client';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Button } from 'react-bootstrap';
 import { CopyIcon } from '@primer/octicons-react';

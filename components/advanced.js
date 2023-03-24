@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useRef, useState } from 'react';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import FormCheck from 'react-bootstrap/FormCheck';
