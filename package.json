@@ -13,7 +13,7 @@
     "url": "https://github.com/jirihofman"
   },
   "scripts": {
-    "dev": "next dev -p 4041",
+    "dev": "next dev -p 4041 --turbo",
     "build": "next build",
     "start": "next start -p 5041",
     "lint": "eslint . --ext .js,.jsx",
