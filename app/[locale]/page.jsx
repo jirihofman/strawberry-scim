@@ -1,14 +1,13 @@
 'use client';
-import { ToastProvider } from '../components/toast-manager';
-
 import { Tabs, Tab } from 'react-bootstrap';
-import Header from '../components/header';
-import Connection from '../components/connection';
-import Groups from '../components/groups';
-import Users from '../components/users';
-import Advanced from '../components/advanced';
+import { ToastProvider } from '../../components/toast-manager';
+import Header from '../../components/header';
+import Connection from '../../components/connection';
+import Groups from '../../components/groups';
+import Users from '../../components/users';
+import Advanced from '../../components/advanced';
 
-import pjson from '../package.json';
+import pjson from '../../package.json';
 
 export default function Home() {
     return (

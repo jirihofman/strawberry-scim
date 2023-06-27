@@ -3,11 +3,13 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import { OverlayTrigger, Popover, Row, Col, InputGroup } from 'react-bootstrap';
+import { useTranslations } from 'next-intl';
 import { loadConnectionsFromLocalStorage, loadActiveConnectionFromLocalStorage, getFixedCurlCommand } from '../lib/util';
 import CurlCopyButton from './curl-copy-button';
 
 export default function Test() {
 
+    const t = useTranslations();
     const [result, setResult] = useState();
     const [connections, setConnections] = useState([]);
     const [activeConnection, setActiveConnection] = useState(null);
@@ -127,7 +129,7 @@ export default function Test() {
 
     return (
         <section id='test' className='px-1'>
-            <h3>Test credentials {badgesHTML}</h3>
+            <h3>Test credentials {badgesHTML} {t('hi')}</h3>
 
             <Row>
                 <Col xs={12} md={5}>
