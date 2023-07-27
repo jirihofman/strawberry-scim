@@ -39,7 +39,7 @@
     "eslint": "^7.13.0",
     "eslint-config-next": "^13.2.4",
     "eslint-plugin-cypress": "^2.11.2",
-    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react": "^7.33.0",
     "wait-on": "^7.0.0"
   }
 }
