@@ -5,7 +5,7 @@ module.exports = defineConfig({
     // setupNodeEvents(on, config) {
     //     // implement node event listeners here
     // },
-        baseUrl: 'http://localhost:4041',
+        baseUrl: 'http://localhost:3000',
         specPattern: '**/*.spec.js',
     },
     videoUploadOnPasses: false,
