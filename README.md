@@ -22,7 +22,7 @@ Dev:
 ```sh
 npm run dev
 ```
-Open `http://localhost:4041`
+Open `http://localhost:3000`
 
 Stack:
 - Nextjs on Vercel
