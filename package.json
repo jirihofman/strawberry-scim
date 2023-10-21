@@ -28,7 +28,7 @@
     "axios": "^1.5.1",
     "axios-curlirize": "^2.0.0",
     "lodash": "^4.17.21",
-    "next": "^13.5.4",
+    "next": "^13.5.6",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.0",
     "react-copy-to-clipboard": "^5.1.0",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "cypress": "^13.3.1",
     "eslint": "^8.51.0",
-    "eslint-config-next": "^13.5.4",
+    "eslint-config-next": "^13.5.6",
     "eslint-plugin-cypress": "^2.15.1",
     "eslint-plugin-react": "^7.33.2",
     "wait-on": "^7.0.0"
