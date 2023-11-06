@@ -37,7 +37,7 @@
   "devDependencies": {
     "cypress": "^13.4.0",
     "eslint": "^8.52.0",
-    "eslint-config-next": "^14.0.0",
+    "eslint-config-next": "^14.0.1",
     "eslint-plugin-cypress": "^2.15.1",
     "eslint-plugin-react": "^7.33.2",
     "wait-on": "^7.0.0"
