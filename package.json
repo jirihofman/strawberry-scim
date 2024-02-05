@@ -35,7 +35,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "cypress": "^13.6.3",
+    "cypress": "^13.6.4",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.1.0",
     "eslint-plugin-cypress": "^2.15.1",
