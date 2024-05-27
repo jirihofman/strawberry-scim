@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@primer/octicons-react": "^19.9.0",
-    "axios": "^1.7.0",
+    "axios": "^1.7.2",
     "axios-curlirize": "^2.0.0",
     "lodash": "^4.17.21",
     "next": "^14.2.3",
