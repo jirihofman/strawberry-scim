@@ -40,6 +40,6 @@
     "eslint-config-next": "^14.2.7",
     "eslint-plugin-cypress": "^3.5.0",
     "eslint-plugin-react": "^7.35.0",
-    "wait-on": "^7.2.0"
+    "wait-on": "^8.0.0"
   }
 }
