@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px dashed blue;
+}
+
+#menu {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  border-bottom: 1px solid gray;
+}
+
+#menu li {
+  display: inline;
+  padding: 0 10px;
+  border-left: solid 1px black;
+}
+
+#menu li:first-child {
+  border-left: none;
+}

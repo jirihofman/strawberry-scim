@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HomePage from '../components/HomePage.jsx';
+
+const packageJson = await import('../../package.json');
+const { displayName, description, version, author, repository, name } = packageJson.default;
+
+const packageInfo = {
+    displayName,
+    description,
+    version,
+    author,
+    repository,
+    name
+};
+---
+
+<Layout title={displayName} description={description}>
+    <HomePage packageInfo={packageInfo} client:load />
+</Layout>

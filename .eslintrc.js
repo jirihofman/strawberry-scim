@@ -1,8 +1,7 @@
 module.exports = {
     extends: [
         'eslint:recommended',
-        'plugin:react/recommended',
-        'plugin:cypress/recommended'
+        'plugin:react/recommended'
     ],
     rules: {
         'indent': ['error', 4, { 'SwitchCase': 1 }],
