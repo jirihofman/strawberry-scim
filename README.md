@@ -17,14 +17,21 @@ For every action there is curl command available which you can copy to clipboard
 ## Demo
 Try it right away: https://strawberry-scim.vercel.app/
 
-# Next.js
+# Astro
 Dev:
 ```sh
 npm run dev
 ```
 Open `http://localhost:3000`
 
+Build:
+```sh
+npm run build
+npm run start
+```
+
 Stack:
-- Nextjs on Vercel
+- Astro with React components
 - React Bootstrap 5
+- Node.js adapter for server-side functionality
 
