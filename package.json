@@ -21,7 +21,7 @@
     "test:start": "NODE_ENV=test next start -p 5041",
     "test:wait-on": "wait-on http://127.0.0.1:5041",
     "test:cy:run": "CYPRESS_BASE_URL=http://localhost:5041 CYPRESS_NODE_ENV=test cypress run --browser chrome",
-    "ci:test": "./node_modules/.bin/cypress run --component && npm run test:build && npm run test:start & npm run test:wait-on && npm run test:cy:run"
+    "ci:test": "bash scripts/ci-test.sh"
   },
   "dependencies": {
     "@primer/octicons-react": "^19.38.0",
